@@ -10,11 +10,14 @@ bool gOver;
 const int width = 40;
 const int height = 20;
 int x, y;
-int coinX, coinY; 
+int coinX, coinY;
+int shotX, shotY; 
 int points= 0 ; 
 bool coin =0; 
+bool loop =0 ;
 enum eDirecton { STOP = 1, LEFT, RIGHT, UP, DOWN };
 eDirecton dir;
+
 
 void Setup() /*Values and Positions of entities*/
 {
@@ -26,13 +29,16 @@ void Setup() /*Values and Positions of entities*/
 
     coinX =26; 
     coinY = height -2 ;
+
+    shotX = 24 ;
+    shotY = 0 ; 
 }
 
 void Draw()/*Drawing the map and the Charachter and also the entities*/
 {
     system("cls");
 
-    cout << "C0NTROLS:"<< endl <<"BY PUSHING" << endl << "W - JUMP" << endl << "A - LEFT" << endl<<"D - RIGHT "<<endl;
+    cout << "C0NTROLS:" << endl << "W - JUMP" << endl << "A - LEFT" << endl<<"D - RIGHT "<< endl;
     for (int i = 0; i < width + 2; i++)
         cout << "#";
     cout << endl;
@@ -52,6 +58,10 @@ void Draw()/*Drawing the map and the Charachter and also the entities*/
             else if (i == coinY && j == coinX && coin == 0)
             {
                 cout << "C";
+            }
+            else if (i == shotY && j == shotX)
+            {
+                cout << "!";
             }
             else
             {
@@ -98,20 +108,24 @@ void Input()
         switch (_getch())
         {
         case 'a':
+        {
             dir = LEFT;
-
-            break;
+            break; }
         case 'd':
+        {
             dir = RIGHT;
-
             break;
+        }
         case 'w':
+        {
             dir = UP;
-
             break;
+        }
         case 'x':
+        {
             gOver = true;
             break;
+        }
         }
     }
 
@@ -160,6 +174,23 @@ void coinObt() /*Coin Obtainted*/
     
     
 }
+
+void Shot()
+{
+    if (loop == 0)
+    {
+        shotY++;
+    }
+}
+
+void Death()
+{
+    if (x == shotX && y == shotY)
+    {
+        cout << " ";
+        gOver = true; 
+    }
+}
 void GameO()/*Game Over*/
 {
     if (gOver == true)
@@ -177,6 +208,8 @@ int main()
         Draw();
         Input();
         coinObt(); 
+        Shot(); 
+        Death();
         GameO();
     }
     return 0;
