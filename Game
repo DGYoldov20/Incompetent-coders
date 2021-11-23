@@ -216,6 +216,7 @@ void GameO()/*Game Over*/
         }
        
     }
+    /*We used patorjk.com for the GAME OVER ascii art*/
 
     cout << "P0INTS: " << points; 
 
