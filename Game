@@ -15,11 +15,11 @@ const int height = 20;
 int x, y;
 int coinX, coinY;
 int shotX, shotY; 
+int shot2Y, shot2X;
 int points= 0 ; 
 bool coin =0; 
 bool loop =0 ,loop1=0;
 int cloc = 0;
-int shot2X, shot2Y; 
 enum eDirecton { STOP = 1, LEFT, RIGHT, UP, DOWN };
 
 eDirecton dir;
@@ -27,22 +27,22 @@ eDirecton dir;
 
 void Setup() /*Values and Positions of entities*/
 {
-    gOver = false;
-    dir = STOP;
+        gOver = false;
+        dir = STOP;
 
-    x = (width / 2) - 1;
-    y = height - 1;
+        x = (width / 2) - 1;
+        y = height - 1;
 
-    coinX =26; 
-    coinY = height -2 ;
+        coinX =26; 
+        coinY = height -2 ;
    
         shotX = 24;
         shotY = 0;
 
-        shot2X = 27;
-        shot2Y = 0;
-       
-   
+        shot2Y = 0; 
+        shot2X = 27; 
+      
+      
 }
 
 void Draw()/*Drawing the map and the Charachter and also the entities*/
@@ -70,11 +70,11 @@ void Draw()/*Drawing the map and the Charachter and also the entities*/
             {
                 cout << "C";
             }
-            else if (i == shotY && j == shotX)
+            else if (i == shotY && j == shotX )
             {
                 cout << "!";
             }
-            else if (i == shot2Y && j == shot2X)
+            else if (i == shot2Y && j == shot2X && cloc >=30)
             {
                 cout << "!";
             }
@@ -192,6 +192,7 @@ void coinObt() /*Coin Obtainted*/
     
 }
 
+
 void Shot()
 {
     if (loop == 0)
@@ -276,4 +277,6 @@ int main()
     }
     return 0;
 }
+
+
 
