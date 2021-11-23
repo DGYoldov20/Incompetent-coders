@@ -14,11 +14,12 @@ const int width = 40;
 const int height = 20;
 int x, y;
 int coinX, coinY;
-int shotX, shotY; 
+int shotX, shotY;
 int shot2Y, shot2X;
-int points= 0 ; 
-bool coin =0; 
-bool loop =0 ,loop1=0;
+int shot3Y, shot3X;
+int points = 0;
+bool coin = 0;
+bool loop = 0, loop1 = 0, loop2=0;
 int cloc = 0;
 enum eDirecton { STOP = 1, LEFT, RIGHT, UP, DOWN };
 
@@ -27,29 +28,31 @@ eDirecton dir;
 
 void Setup() /*Values and Positions of entities*/
 {
-        gOver = false;
-        dir = STOP;
+    gOver = false;
+    dir = STOP;
 
-        x = (width / 2) - 1;
-        y = height - 1;
+    x = (width / 2) - 1;
+    y = height - 1;
 
-        coinX =26; 
-        coinY = height -2 ;
-   
-        shotX = 24;
-        shotY = 0;
+    coinX = 26;
+    coinY = height - 2;
 
-        shot2Y = 0; 
-        shot2X = 27; 
-      
-      
+    shotX = 24;
+    shotY = 0;
+
+    shot2Y = 0;
+    shot2X = 27;
+
+    shot3Y = height - 1; 
+    shot3X=width -1;
+
 }
 
 void Draw()/*Drawing the map and the Charachter and also the entities*/
 {
     system("cls");
 
-    cout << "C0NTROLS:" << endl << "W - JUMP" << endl << "A - LEFT" << endl<<"D - RIGHT "<< endl;
+    cout << "C0NTROLS:" << endl << "W - JUMP" << endl << "A - LEFT" << endl << "D - RIGHT " << endl;
     for (int i = 0; i < width + 2; i++)
         cout << "#";
     cout << endl;
@@ -70,11 +73,15 @@ void Draw()/*Drawing the map and the Charachter and also the entities*/
             {
                 cout << "C";
             }
-            else if (i == shotY && j == shotX )
+            else if (i == shotY && j == shotX)
             {
                 cout << "!";
             }
-            else if (i == shot2Y && j == shot2X && cloc >=30)
+            else if (i == shot2Y && j == shot2X && cloc >= 30)
+            {
+                cout << "!";
+            }
+            else if (i == shot3Y && j == shot3X && cloc >= 35)
             {
                 cout << "!";
             }
@@ -98,7 +105,7 @@ void Draw()/*Drawing the map and the Charachter and also the entities*/
 
     cout << "P0INTS: " << points << endl;
 
-    cout << "T1ME: " << cloc; 
+    cout << "T1ME: " << cloc;
 
     if (x >= width)
     {
@@ -162,13 +169,15 @@ void Input()
     }
     case UP:
     {
-        y--; 
+        
+        y--;
         dir = STOP;
-        dir = DOWN; 
-        break; 
+        dir = DOWN;
+        break;
     }
-    case DOWN: 
+    case DOWN:
     {
+        y++;
         y++;
         dir = STOP;
         break;
@@ -180,16 +189,16 @@ void coinObt() /*Coin Obtainted*/
     if (x == coinX && y == coinY)
     {
         coin = 1;
-        
+
     }
     if (coin == 1)
     {
         cout << " ";
-        points =1; 
+        points = 1;
     }
-    
-    
-    
+
+
+
 }
 
 
@@ -198,26 +207,32 @@ void Shot()
     if (loop == 0)
     {
         shotY++;
-       
+
     }
     if (cloc == 30)
     {
-        loop = 1; 
+        loop = 1;
     }
     if (loop == 1)
     {
 
         shot2Y++;
     }
-
-    
+    if (cloc == 35)
+    {
+        loop2 = 1;
+    }
+    if( loop2==1 )
+    {
+        shot3X--;
+    }
 }
 
 void CL0()
 {
     if (loop1 == 0)
     {
-        
+
         cloc++;
     }
 
@@ -227,9 +242,14 @@ void Death()
     if (x == shotX && y == shotY)
     {
         cout << " ";
-        gOver = true; 
+        gOver = true;
     }
     if (x == shot2X && y == shot2Y)
+    {
+        cout << " ";
+        gOver = true;
+    }
+    if (x == shot3X && y == shot3Y)
     {
         cout << " ";
         gOver = true;
@@ -258,7 +278,7 @@ void GameO()/*Game Over*/
         cout << "F1NAL SC0RE: " << points;
     }
 
-    
+
 
 }
 int main()
@@ -269,8 +289,8 @@ int main()
 
         Draw();
         Input();
-        coinObt(); 
-        Shot(); 
+        coinObt();
+        Shot();
         CL0();
         Death();
         GameO();
