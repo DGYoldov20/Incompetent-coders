@@ -17,7 +17,9 @@ int coinX, coinY;
 int shotX, shotY; 
 int points= 0 ; 
 bool coin =0; 
-bool loop =0 ;
+bool loop =0 ,loop1=0;
+int cloc = 0;
+int shot2X, shot2Y; 
 enum eDirecton { STOP = 1, LEFT, RIGHT, UP, DOWN };
 
 eDirecton dir;
@@ -33,9 +35,14 @@ void Setup() /*Values and Positions of entities*/
 
     coinX =26; 
     coinY = height -2 ;
+   
+        shotX = 24;
+        shotY = 0;
 
-    shotX = 24 ;
-    shotY = 0 ; 
+        shot2X = 27;
+        shot2Y = 0;
+       
+   
 }
 
 void Draw()/*Drawing the map and the Charachter and also the entities*/
@@ -67,6 +74,10 @@ void Draw()/*Drawing the map and the Charachter and also the entities*/
             {
                 cout << "!";
             }
+            else if (i == shot2Y && j == shot2X)
+            {
+                cout << "!";
+            }
             else
             {
                 cout << " ";
@@ -85,7 +96,9 @@ void Draw()/*Drawing the map and the Charachter and also the entities*/
     }
     cout << endl;
 
-    cout << "P0INTS: " << points;
+    cout << "P0INTS: " << points << endl;
+
+    cout << "T1ME: " << cloc; 
 
     if (x >= width)
     {
@@ -184,9 +197,30 @@ void Shot()
     if (loop == 0)
     {
         shotY++;
+       
     }
+    if (cloc == 30)
+    {
+        loop = 1; 
+    }
+    if (loop == 1)
+    {
+
+        shot2Y++;
+    }
+
+    
 }
 
+void CL0()
+{
+    if (loop1 == 0)
+    {
+        
+        cloc++;
+    }
+
+}
 void Death()
 {
     if (x == shotX && y == shotY)
@@ -194,7 +228,13 @@ void Death()
         cout << " ";
         gOver = true; 
     }
+    if (x == shot2X && y == shot2Y)
+    {
+        cout << " ";
+        gOver = true;
+    }
 }
+
 void GameO()/*Game Over*/
 {
     if (gOver == true)
@@ -214,11 +254,10 @@ void GameO()/*Game Over*/
         {
             cout << "Unable to open file";
         }
-       
+        cout << "F1NAL SC0RE: " << points;
     }
-    /*We used patorjk.com for the GAME OVER ascii art*/
 
-    cout << "P0INTS: " << points; 
+    
 
 }
 int main()
@@ -231,6 +270,7 @@ int main()
         Input();
         coinObt(); 
         Shot(); 
+        CL0();
         Death();
         GameO();
     }
