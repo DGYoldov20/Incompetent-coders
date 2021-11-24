@@ -18,7 +18,7 @@ int shot2Y, shot2X;
 int shot3Y, shot3X;
 int points = 0;
 bool coin = 0;
-bool loop = 0, loop1 = 0, loop2=0;
+bool loop = 0, loop1 = 0, loop2 = 0,loop3=0;
 int cloc = 0;
 enum eDirecton { STOP = 1, LEFT, RIGHT, UP, DOWN };
 
@@ -31,19 +31,19 @@ void Setup() /*Values and Positions of entities*/
     dir = STOP;
 
     x = (width / 2) - 1;
-    y = height - 1;
+    y = 1;
 
     coinX = 26;
-    coinY = height - 2;
+    coinY = height - 1;
 
     shotX = 24;
-    shotY = 0;
+    shotY = height - 1;
+    shot2Y = height - 1;
 
-    shot2Y = 0;
-    shot2X = 27;
+    shot2X = 10;
 
-    shot3Y = height - 1; 
-    shot3X=width -1;
+    shot3Y = height - 1;
+    shot3X = 20;
 
 }
 
@@ -68,21 +68,21 @@ void Draw()/*Drawing the map and the Charachter and also the entities*/
             {
                 cout << "O";
             }
-            else if (i == coinY && j == coinX && coin == 0)
+            else if (i == coinY && j == coinX && coin == 0&&cloc >= 40)
             {
                 cout << "C";
             }
             else if (i == shotY && j == shotX)
             {
-                cout << "!";
+                cout << "#";
             }
             else if (i == shot2Y && j == shot2X && cloc >= 30)
             {
-                cout << "!";
+                cout << "#";
             }
             else if (i == shot3Y && j == shot3X && cloc >= 35)
             {
-                cout << "!";
+                cout << "#";
             }
             else
             {
@@ -98,7 +98,7 @@ void Draw()/*Drawing the map and the Charachter and also the entities*/
     }
     for (int i = 0; i < width + 2; i++)
     {
-        cout << "#";
+        cout << "#";    
     }
     cout << endl;
 
@@ -139,11 +139,6 @@ void Input()
             dir = RIGHT;
             break;
         }
-        case 'w':
-        {
-            dir = UP;
-            break;
-        }
         case 'x':
         {
             gOver = true;
@@ -166,21 +161,7 @@ void Input()
         dir = STOP;
         break;
     }
-    case UP:
-    {
-        
-        y--;
-        dir = STOP;
-        dir = DOWN;
-        break;
-    }
-    case DOWN:
-    {
-        y++;
-        y++;
-        dir = STOP;
-        break;
-    }
+    
     }
 }
 void coinObt() /*Coin Obtainted*/
@@ -205,7 +186,7 @@ void Shot()
 {
     if (loop == 0)
     {
-        shotY++;
+        shotY--;
 
     }
     if (cloc == 30)
@@ -215,16 +196,27 @@ void Shot()
     if (loop == 1)
     {
 
-        shot2Y++;
+        shot2Y--;
     }
     if (cloc == 35)
     {
         loop2 = 1;
     }
-    if( loop2==1 )
+    if (loop2 == 1)
     {
-        shot3X--;
+        shot3Y--;
+       
     }
+    if (cloc == 40)
+    {
+        loop3 = 1; 
+    }
+    if (loop3 == 1)
+    {
+        coinY--;
+
+    }
+
 }
 
 void CL0()
@@ -299,7 +291,7 @@ int main()
 
 /*OOO     OOO
    O     O
-   O     O        
+   O     O
   OOO     OOO  */
 
 
