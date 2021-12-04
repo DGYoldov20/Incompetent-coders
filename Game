@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <vector>
 #include <time.h>
+#include "program.h"
 using namespace std;
 
 string line;
@@ -26,12 +27,22 @@ int ellapsedTime = 0;
 enum eDirecton { STOP = 1, LEFT, RIGHT, UP, DOWN };
 
 eDirecton dir;
-
+//includes all types of variables needet to draw the map
 struct Obstacle {
 	int coordinateX, coordinateY;
 	char symbol;
 	double velocity = 0;
+	bool isMoney = false;
 
+
+	//creates obstacles in the map
+	Obstacle(int X, int Y, char printSymbol = '#', bool money = false) {
+		coordinateX = X;
+		coordinateY = Y;
+		symbol = printSymbol;
+		isMoney = money;
+	}
+	//calculates the velocity
 	double calculateDistance(double t) {
 		return velocity + ACCELERATION * (t * t) / 2;
 	}
@@ -41,14 +52,17 @@ struct Obstacle {
 	}
 };
 
+
+//draws the player
 struct Player {
 	int coordinateX, coordinateY;
 	char symbol;
 };
-
+//dinamic array that creates the player
 vector<Obstacle> obstacles;
 Player player;
 
+//gives the position of the player
 void setPosition(short x, short y)
 {
 	COORD crd = { x,y };
@@ -57,10 +71,9 @@ void setPosition(short x, short y)
 		::SetConsoleCursorPosition(hOut, crd);
 	}
 }
-
+//clears screen without flickering
 void ClearScreen()
 {
-	//we clear the frame by resetting the cursor position
 	setPosition(0, 0);
 }
 
@@ -68,13 +81,9 @@ Obstacle GenerateObstacle() {
 	int coordinateX = rand() % FIELD_WIDTH + 1;
 	int coordinateY = FIELD_HEIGHT - 3;
 	string symbols = "#$*@";
-	//char symbols[] = {'#', '$', '*', '@'};
 
 	int randomSymbolIndex = rand() % symbols.size();
-	Obstacle obstacle;
-	obstacle.coordinateX = coordinateX;
-	obstacle.coordinateY = coordinateY;
-	obstacle.symbol = '#';
+	Obstacle obstacle(coordinateX, coordinateY);
 
 	return obstacle;
 }
@@ -88,16 +97,131 @@ void Setup() /*Values and Positions of entities*/
 	dir = STOP;
 
 	player.coordinateX = (FIELD_WIDTH / 2) - 1;
-	player.coordinateY = 1;
+	player.coordinateY = 2;
 	player.symbol = 'O';
+	BuildMap();
 
 	obstacles.push_back(GenerateObstacle());
 }
 
-
-void Draw()/*Drawing the map and the Charachter and also the entities*/
+void BuildMap()
 {
-	Obstacle velocity;
+	//1st row
+	for (int i = 1; i <= 3; i++)
+	{
+		obstacles.push_back(Obstacle(i, 5));
+	}
+
+	obstacles.push_back(Obstacle(5, 5, '$', true));
+
+	for (int i = 7; i <= FIELD_WIDTH; i++)
+	{
+		obstacles.push_back(Obstacle(i, 5));
+	}
+	// 2nd row
+	for (int i = 0; i <= 5; i++)
+	{
+		obstacles.push_back(Obstacle(i, 8));
+
+	}
+
+	obstacles.push_back(Obstacle(7, 8, '$', true));
+	for (int i = 9; i <= FIELD_WIDTH; i++)
+	{
+		obstacles.push_back(Obstacle(i, 8));
+
+	}
+	// 3rd row
+	for (int i = 0; i <= 7; i++)
+	{
+		obstacles.push_back(Obstacle(i, 12));
+
+	}
+
+	obstacles.push_back(Obstacle(9, 12, '$', true));
+	for (int i = 11; i <=FIELD_WIDTH; i++)
+	{
+		obstacles.push_back(Obstacle(i, 12));
+
+	}
+
+
+	//4th row
+	for (int i = 0; i <= 9; i++)
+	{
+		obstacles.push_back(Obstacle(i, 17));
+
+	}
+
+	obstacles.push_back(Obstacle(11, 17, '$', true));
+	for (int i = 13; i <= FIELD_WIDTH; i++)
+	{
+		obstacles.push_back(Obstacle(i, 17));
+
+	}
+
+
+	//5th row
+
+	for (int i = 0; i <= 11; i++)
+	{
+		obstacles.push_back(Obstacle(i, 24));
+
+	}
+
+	obstacles.push_back(Obstacle(13, 24, '$', true));
+
+
+	for (int i = 15; i <= FIELD_WIDTH; i++)
+	{
+		obstacles.push_back(Obstacle(i, 24));
+
+	}
+	//6th row
+
+	for (int i = 0; i <= 13; i++)
+	{
+		obstacles.push_back(Obstacle(i, 33));
+
+	}
+
+	obstacles.push_back(Obstacle(15, 33, '$', true));
+
+
+	for (int i = 17; i <= FIELD_WIDTH; i++)
+	{
+		obstacles.push_back(Obstacle(i, 33));
+
+	}
+
+	// 7th row
+	for (int i = 0; i <= 15; i++)
+	{
+		obstacles.push_back(Obstacle(i, 44));
+
+	}
+
+	obstacles.push_back(Obstacle(17, 44, '$', true));
+
+
+	for (int i = 19; i <= FIELD_WIDTH; i++)
+	{
+		obstacles.push_back(Obstacle(i, 44));
+
+	}
+
+
+	//end
+	for (int i = 1; i <= FIELD_WIDTH; i++)
+	{
+		obstacles.push_back(Obstacle(i, 57));
+	}
+
+}
+
+//Drawing the map and the Charachter and also the entities
+void Draw()
+{
 	ClearScreen();
 	cout << "C0NTROLS:" << endl << "A - LEFT" << endl << "D - RIGHT " << endl;
 	for (int i = 0; i < FIELD_WIDTH; i++)
@@ -152,20 +276,26 @@ void Draw()/*Drawing the map and the Charachter and also the entities*/
 
 	cout << "P0INTS: " << points << endl;
 
-	cout << "T1ME: " << ellapsedTime<<endl;
-	for (auto it = obstacles.begin(); it != obstacles.end(); ++it)
+	cout << "T1ME: " << ellapsedTime << endl;
+
+	auto it = obstacles.begin();
+	if (obstacles.size() > 0)
 	{
 		if ((*it).velocity * 100 <= 277)
 		{
-			cout << "Velocity: " << (*it).velocity * 100<<" m/s";
-
+			cout << "Velocity: " << (*it).velocity * 100 << " m/s     ";
 		}
 		else
 		{
-			cout << "Velocity: " << 277 << "m/s";
+			cout << "Velocity: " << " 277 m/s";
 		}
+	} 
+	else
+	{
+		cout << "Velocity: 0 m/s" << endl;
 	}
-	
+
+
 	if (x >= FIELD_WIDTH)
 	{
 		x = FIELD_WIDTH - 1;
@@ -202,34 +332,14 @@ void Input()
 			player.coordinateX = (player.coordinateX + 1 < FIELD_WIDTH - 1) ? player.coordinateX + 1 : FIELD_WIDTH - 2;
 			break;
 		}
-		case 'x':
-		{
-			gOver = true;
-			break;
-		}
 		}
 	}
 
 
 }
-void coinObt() /*Coin Obtainted*/
-{
-	if (x == coinX && y == coinY)
-	{
-		coin = 1;
-
-	}
-	if (coin == 1)
-	{
-		cout << " ";
-		points = 1;
-	}
 
 
-
-}
-
-
+//moves the obstacles upwards
 void UpdateObstacles()
 {
 	for (auto it = obstacles.begin(); it != obstacles.end(); ++it)
@@ -239,6 +349,8 @@ void UpdateObstacles()
 	}
 }
 
+
+//simple clock
 void CL0()
 {
 	currentClock++;
@@ -250,11 +362,14 @@ void CL0()
 		}
 	}
 }
+
+
+//game ends if x and y of the player match x and y of an obstacle
 void Death()
 {
 	for (auto it = obstacles.begin(); it != obstacles.end(); ++it)
 	{
-		if (player.coordinateX == (*it).coordinateX && player.coordinateY == (*it).coordinateY)
+		if (player.coordinateX == (*it).coordinateX && player.coordinateY == (*it).coordinateY && (*it).isMoney == false)
 		{
 			gOver = true;
 		}
@@ -262,11 +377,42 @@ void Death()
 
 }
 
+
+//score increase if x and y of the player match x and y of a dolar sign
+
+void Payment()
+{
+	//collapse into coin -> increse points
+	auto deleteCoin = obstacles.end();
+	for (auto it = obstacles.begin(); it != obstacles.end(); ++it)
+	{
+		if (player.coordinateX == (*it).coordinateX && player.coordinateY == (*it).coordinateY && (*it).isMoney)
+		{
+			deleteCoin = it;
+			points++;
+		}
+	}
+
+	if (deleteCoin != obstacles.end()) {
+		obstacles.erase(deleteCoin);
+	}
+}
+//if "Death" is detected we execute "GameO"
 void GameO()/*Game Over*/
 {
 	if (gOver == true)
 	{
-		ClearScreen();
+		system("cls");
+		//clear the buggy output
+		for (int i = 0; i < FIELD_HEIGHT + 10; i++)
+		{
+			for (int j = 0; j < FIELD_WIDTH; j++)
+			{
+				cout << " ";
+			}
+			cout << endl;
+		}
+		setPosition(0, 0);
 		string line;
 		ifstream myfile("File.txt");
 		if (myfile.is_open())
@@ -282,6 +428,8 @@ void GameO()/*Game Over*/
 			cout << "Unable to open file";
 		}
 		cout << "F1NAL SC0RE: " << points;
+		
+
 	}
 
 
@@ -297,9 +445,9 @@ int main()
 		Draw();
 		Input();
 		CL0();
-		coinObt();
+		Payment();
 		Death();
-		//GameO();
+		GameO();
 		Sleep(100);
 	}
 	return 0;
